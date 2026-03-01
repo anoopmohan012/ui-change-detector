@@ -8,14 +8,6 @@ pipeline {
 
     stages {
 
-//         stage('Checkout Code') {
-//             steps {
-//               git credentialsId: 'github-pat',
-//                           url: 'https://github.com/anoopmohan012/ui-change-detector.git',
-//                           branch: 'main'
-//             }
-        }
-
         stage('Build Project') {
             steps {
                 bat 'mvn clean package'
