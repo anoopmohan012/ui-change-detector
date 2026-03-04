@@ -6,6 +6,10 @@ pipeline {
         maven 'Maven3'
     }
 
+    environment {
+        VERSION = "v${BUILD_NUMBER}"
+    }
+
     stages {
 
         stage('Build Project') {
@@ -16,13 +20,13 @@ pipeline {
 
         stage('Capture Current Screenshots') {
             steps {
-                bat 'java -jar target/ui-change-detector-1.0-SNAPSHOT.jar current urls.txt v_latest'
+                bat "java -jar target/ui-change-detector-1.0-SNAPSHOT.jar current urls.txt %VERSION%"
             }
         }
 
         stage('Compare With Baseline') {
             steps {
-                bat 'java -jar target/ui-change-detector-1.0-SNAPSHOT.jar compare v_latest'
+                bat "java -jar target/ui-change-detector-1.0-SNAPSHOT.jar compare %VERSION%"
             }
         }
 
