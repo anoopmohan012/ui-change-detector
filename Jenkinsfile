@@ -19,8 +19,8 @@ pipeline {
 
         stage('Pipeline Info') {
             steps {
-                echo "Running ACTION: ${params.ACTION}"
-                echo "VERSION: ${params.VERSION}"
+                echo "Action Selected: ${params.ACTION}"
+                echo "Version: ${params.VERSION}"
             }
         }
 
@@ -45,24 +45,6 @@ pipeline {
             }
             steps {
                 bat "java -jar target/ui-change-detector-1.0-SNAPSHOT.jar current urls.txt ${params.VERSION}"
-            }
-        }
-
-        stage('Copy Baseline Artifacts') {
-            when {
-                expression { params.ACTION == 'compare' }
-            }
-            steps {
-                copyArtifacts projectName: 'UI-Baseline', selector: lastSuccessful()
-            }
-        }
-
-        stage('Copy Current Artifacts') {
-            when {
-                expression { params.ACTION == 'compare' }
-            }
-            steps {
-                copyArtifacts projectName: 'UI-Current', selector: lastSuccessful()
             }
         }
 
