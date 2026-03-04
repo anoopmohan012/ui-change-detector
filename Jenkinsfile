@@ -7,7 +7,7 @@ pipeline {
     }
 
     parameters {
-        string(name: 'VERSION', defaultValue: 'v1.0', description: 'UI comparison version')
+        string(name: 'VERSION', defaultValue: 'v4.0', description: 'UI comparison version')
     }
 
     stages {
