@@ -7,16 +7,15 @@ pipeline {
     }
 
     parameters {
-        string(name: 'VERSION', defaultValue: 'v4.0', description: 'UI comparison version')
+        choice(
+            name: 'ACTION',
+            choices: ['baseline', 'current', 'compare'],
+            description: 'Select pipeline action'
+        )
+        string(name: 'VERSION', defaultValue: 'v1.0', description: 'UI version')
     }
 
     stages {
-
-        stage('Print Version') {
-            steps {
-                echo "Running build for version ${params.VERSION}"
-            }
-        }
 
         stage('Build Project') {
             steps {
@@ -24,13 +23,28 @@ pipeline {
             }
         }
 
+        stage('Capture Baseline') {
+            when {
+                expression { params.ACTION == 'baseline' }
+            }
+            steps {
+                bat "java -jar target/ui-change-detector-1.0-SNAPSHOT.jar baseline urls.txt ${params.VERSION}"
+            }
+        }
+
         stage('Capture Current Screenshots') {
+            when {
+                expression { params.ACTION == 'current' }
+            }
             steps {
                 bat "java -jar target/ui-change-detector-1.0-SNAPSHOT.jar current urls.txt ${params.VERSION}"
             }
         }
 
         stage('Compare With Baseline') {
+            when {
+                expression { params.ACTION == 'compare' }
+            }
             steps {
                 bat "java -jar target/ui-change-detector-1.0-SNAPSHOT.jar compare ${params.VERSION}"
             }
